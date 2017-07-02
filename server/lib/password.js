@@ -9,8 +9,8 @@ exports.sha256 = function (password) {
   var hash = crypto.createHmac('sha256', salt)
   hash.update(password)
   return {
-      salt: salt,
-      sha256: hash.digest('hex')
+    salt: salt,
+    sha256: hash.digest('hex')
   }
 }
 
