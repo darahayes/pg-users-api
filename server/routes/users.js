@@ -11,7 +11,10 @@ exports.register = function register (server, opts, next) {
       path: '/api/user',
       handler: (req, reply) => {
         Users.list((err, result) => {
-          return reply({result: err || result})
+          if (err) {
+            return reply(Boom.badImplementation())
+          }
+          return reply(result)
         })
       },
       config: {
@@ -24,8 +27,14 @@ exports.register = function register (server, opts, next) {
       path: '/api/user/{id}',
       handler: (req, reply) => {
         let {id} = req.params
-        Users.read(id, (err, result) => {
-          return reply({result: err || result})
+        Users.read(id, (err, user) => {
+          if (err) {
+            return reply(Boom.badImplementation)
+          }
+          if (!user) {
+            return reply(Boom.notFound('User not found'))
+          }
+          reply(user)
         })
       },
       config: {

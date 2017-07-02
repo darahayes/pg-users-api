@@ -22,7 +22,7 @@ function connect (callback) {
 
 function getDb (callback) {
   if (db) {
-    callback(null, db)
+    return callback(null, db)
   }
   connect((err, database) => {
     if (err) {
