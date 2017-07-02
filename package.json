@@ -4,6 +4,8 @@
   "description": "A sample users api using hapi and postgres",
   "main": "index.js",
   "scripts": {
+    "start": "index.js",
+    "start:dev": "nodemon index.js",
     "lint": "eslint --ext .js .",
     "test": "tape test/*.js"
   },
@@ -20,6 +22,11 @@
   "dependencies": {
     "eslint-config-standard": "^10.2.1",
     "eslint-plugin-promise": "^3.5.0",
-    "eslint-plugin-standard": "^3.0.1"
+    "eslint-plugin-standard": "^3.0.1",
+    "hapi": "^16.4.3",
+    "hapi-swagger": "^7.7.0",
+    "inert": "^4.2.0",
+    "nodemon": "^1.11.0",
+    "vision": "^4.1.1"
   }
 }
