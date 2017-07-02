@@ -1,0 +1,30 @@
+version: '2'
+services:
+  api:
+    build: ./
+    volumes:
+      - .:/usr/app/
+      - /usr/app/node_modules
+    ports:
+      - "3001:3001"
+    environment:
+      RH_USERS_HOST: 0.0.0.0
+      PG_HOST: postgres
+    command: npm run start:dev
+    links:
+      - postgres
+
+  postgres:
+    image: postgres
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_USER: postgres
+      PGDATA : /var/lib/postgresql/data/pgdata
+    volumes:
+      - psqlvolumes:/var/lib/postgresql/data/pgdata
+
+volumes:
+  psqlvolumes:
+    driver: local
