@@ -10,7 +10,7 @@ services:
     environment:
       RH_USERS_HOST: 0.0.0.0
       PG_HOST: postgres
-    command: npm run start:dev
+    command: npm run db:init && npm run start:dev
     links:
       - postgres
 
