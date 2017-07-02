@@ -8,6 +8,8 @@
     "start:dev": "nodemon index.js",
     "db:init": "node database/init.js",
     "db:migrate": "node database/migrate.js",
+    "db:seed": "NODE_ENV=test node database/seed.js",
+    "db:seed:make": "knex seed:make --knexfile database/knexfile.js",
     "db:migrate:make": "knex migrate:make --knexfile database/knexfile.js",
     "lint": "eslint --ext .js .",
     "test": "tape test/*.js"
