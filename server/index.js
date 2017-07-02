@@ -1,9 +1,11 @@
 // @ts-nocheck
 const Server = require('hapi').Server
-const healthcheck = require('./routes/healthcheck')
 const config = require('./config')
 const inert = require('inert')
 const vision = require('vision')
+
+const healthcheck = require('./routes/healthcheck')
+const users = require('./routes/users')
 
 const {name, version} = require('../package.json')
 
@@ -17,7 +19,8 @@ const startServer = () => {
   const plugins = [
     vision,
     inert,
-    healthcheck
+    healthcheck,
+    users
   ]
 
   if (!config.isProd) {

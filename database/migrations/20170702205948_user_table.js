@@ -7,6 +7,7 @@ exports.up = function(knex, Promise) {
     .createTable('users', (table) => {
       table.increments('id').notNullable().primary(),
       table.string('email').notNullable(),
+      table.string('username').notNullable(),
       table.string('sha256').notNullable(),
       table.string('salt').notNullable()
     })
