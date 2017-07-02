@@ -7,6 +7,8 @@
     "start": "index.js",
     "start:dev": "nodemon index.js",
     "db:init": "node database/init.js",
+    "db:migrate": "node database/migrate.js",
+    "db:migrate:make": "knex migrate:make --knexfile database/knexfile.js",
     "lint": "eslint --ext .js .",
     "test": "tape test/*.js"
   },
@@ -28,6 +30,7 @@
     "hapi": "^16.4.3",
     "hapi-swagger": "^7.7.0",
     "inert": "^4.2.0",
+    "knex": "^0.13.0",
     "lodash": "^4.17.4",
     "nodemon": "^1.11.0",
     "pg": "^6.4.0",
