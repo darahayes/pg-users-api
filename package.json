@@ -1,0 +1,19 @@
+{
+  "name": "rh-users-api",
+  "version": "1.0.0",
+  "description": "A sample users api using hapi and postgres",
+  "main": "index.js",
+  "scripts": {
+    "test": "tape test/*.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/darahayes/rh-users-api.git"
+  },
+  "author": "Dara Hayes",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/darahayes/rh-users-api/issues"
+  },
+  "homepage": "https://github.com/darahayes/rh-users-api#readme"
+}
