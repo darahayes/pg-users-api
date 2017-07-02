@@ -4,6 +4,7 @@
   "description": "A sample users api using hapi and postgres",
   "main": "index.js",
   "scripts": {
+    "lint": "eslint --ext .js .",
     "test": "tape test/*.js"
   },
   "repository": {
@@ -15,5 +16,10 @@
   "bugs": {
     "url": "https://github.com/darahayes/rh-users-api/issues"
   },
-  "homepage": "https://github.com/darahayes/rh-users-api#readme"
+  "homepage": "https://github.com/darahayes/rh-users-api#readme",
+  "dependencies": {
+    "eslint-config-standard": "^10.2.1",
+    "eslint-plugin-promise": "^3.5.0",
+    "eslint-plugin-standard": "^3.0.1"
+  }
 }

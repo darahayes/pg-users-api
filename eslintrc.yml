@@ -1,0 +1,9 @@
+extends:
+  - standard
+
+plugins:
+  - promise
+
+env:
+  node: true
+  es6: true
