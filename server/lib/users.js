@@ -7,6 +7,7 @@ const defaultFields = [
 ]
 
 const allowedFields = [
+  'id',
   'email',
   'username',
   'gender',
@@ -19,10 +20,12 @@ const allowedFields = [
   'picture'
 ]
 
-function list (fields, callback) {
+function list (fields, offset, limit, callback) {
   getDb((err, db) => {
     if (err) return callback(err)
-    db.column(fields || defaultFields).select().from('users')
+    offset = offset || 0
+    limit = limit || 10
+    db('users').column(fields || defaultFields).select().where('id', '>', offset).orderBy('id', 'asc').limit(limit)
       .then((result) => {
         callback(null, result)
       })

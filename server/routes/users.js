@@ -10,8 +10,8 @@ exports.register = function register (server, opts, next) {
       method: 'GET',
       path: '/api/user',
       handler: (req, reply) => {
-        let fields = req.query && req.query.fields ? req.query.fields : null
-        Users.list(fields, (err, result) => {
+        let {fields, offset, limit} = req.query
+        Users.list(fields, offset, limit, (err, result) => {
           if (err) {
             return reply(Boom.badImplementation())
           }
@@ -23,7 +23,9 @@ exports.register = function register (server, opts, next) {
         auth: false,
         validate: {
           query: {
-            fields: [Joi.string().valid(Users.allowedFields), Joi.array().items(Joi.string().valid(Users.allowedFields))]
+            fields: [Joi.string().valid(Users.allowedFields), Joi.array().items(Joi.string().valid(Users.allowedFields))],
+            offset: Joi.number().min(0),
+            limit: Joi.number().min(10).max(30)
           }
         }
       }
