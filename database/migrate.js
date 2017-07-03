@@ -3,7 +3,6 @@
 const knex = require('knex')
 const path = require('path')
 const chalk = require('chalk')
-const _ = require('lodash')
 const config = require('../server/config')
 
 const knexConfig = {
@@ -27,7 +26,7 @@ knex(knexConfig).migrate.latest().spread(function (batchNo, log) {
 
 function exit (err) {
   if (err) {
-    chalk.red(console.error(text.stack))
+    chalk.red(err)
   }
   process.exit(1)
 }

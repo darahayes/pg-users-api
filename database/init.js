@@ -5,7 +5,6 @@ const async = require('async')
 const pg = require('pg')
 const config = require('../server/config')
 
-
 /**
  * This is a hack to connect to PostgreSQL if you do not have a specific db.
  * @see https://github.com/olalonde/pgtools/blob/master/index.js#L43

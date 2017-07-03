@@ -12,12 +12,10 @@ const knexConfig = {
   }
 }
 
-  let k = knex(knexConfig)
+let k = knex(knexConfig)
 
-  k.seed.run().then((res) => {
-    k.destroy().then(() => {
-      return res
-    })
+k.seed.run().then((res) => {
+  k.destroy().then(() => {
+    return res
   })
-
-
+})

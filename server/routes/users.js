@@ -2,7 +2,7 @@
 
 const Users = require('../lib/users.js')
 const Joi = require('joi')
-const Boom  = require('boom')
+const Boom = require('boom')
 
 exports.register = function register (server, opts, next) {
   const routes = [

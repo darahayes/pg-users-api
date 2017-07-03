@@ -1,6 +1,6 @@
 const crypto = require('crypto')
 
-function generateSalt() {
+function generateSalt () {
   return crypto.randomBytes(64).toString('hex')
 }
 
@@ -18,4 +18,3 @@ exports.verify = function (password, salt, hash) {
   var calculated = crypto.createHmac('sha256', salt).update(password).digest('hex')
   return hash === calculated
 }
-

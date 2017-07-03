@@ -10,9 +10,9 @@ const users = require('./routes/users')
 const {name, version} = require('../package.json')
 
 const startServer = () => {
-  const debugMode = config.isProd ? false : true
+  const debugMode = !config.isProd
 
-  const server = new Server({debug: debugMode ? {log: ['debug', 'error', 'warn'], request: ['debug', 'error', 'warn']} : true })
+  const server = new Server({debug: debugMode ? {log: ['debug', 'error', 'warn'], request: ['debug', 'error', 'warn']} : true})
 
   server.connection({host: config.host, port: config.port})
 

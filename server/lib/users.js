@@ -1,8 +1,9 @@
 'use strict'
 const {getDb} = require('./db')
 
-function list(callback) {
+function list (callback) {
   getDb((err, db) => {
+    if (err) return callback(err)
     db.column('email', 'username').select().from('users')
       .then((result) => {
         callback(null, result)
@@ -13,8 +14,9 @@ function list(callback) {
   })
 }
 
-function read(id, callback) {
+function read (id, callback) {
   getDb((err, db) => {
+    if (err) return callback(err)
     db('users').select('email', 'username').where('id', id)
       .then((result) => {
         callback(null, result.length > 0 ? result[0] : null)
@@ -25,16 +27,17 @@ function read(id, callback) {
   })
 }
 
-function create(callback) {
+function create (callback) {
   callback(null, 'Testing')
 }
 
-function update(callback) {
+function update (callback) {
   callback(null, 'Testing')
 }
 
-function remove(id, callback) {
+function remove (id, callback) {
   getDb((err, db) => {
+    if (err) return callback(err)
     db('users').where('id', id).delete()
       .then((rows) => {
         callback(null, rows > 0)

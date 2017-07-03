@@ -12,7 +12,7 @@
     "db:seed:make": "knex seed:make --knexfile database/knexfile.js",
     "db:migrate:make": "knex migrate:make --knexfile database/knexfile.js",
     "lint": "eslint --ext .js .",
-    "test": "tape test/*.js"
+    "test": "lab test"
   },
   "repository": {
     "type": "git",
@@ -27,7 +27,10 @@
   "dependencies": {
     "async": "^2.5.0",
     "boom": "^5.1.0",
+    "code": "^4.1.0",
     "eslint-config-standard": "^10.2.1",
+    "eslint-plugin-import": "^2.6.1",
+    "eslint-plugin-node": "^5.1.0",
     "eslint-plugin-promise": "^3.5.0",
     "eslint-plugin-standard": "^3.0.1",
     "hapi": "^16.4.3",
@@ -35,6 +38,7 @@
     "inert": "^4.2.0",
     "joi": "^10.6.0",
     "knex": "^0.13.0",
+    "lab": "^14.1.0",
     "lodash": "^4.17.4",
     "nodemon": "^1.11.0",
     "pg": "^6.4.0",
