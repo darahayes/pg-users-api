@@ -4,7 +4,7 @@ function generateSalt () {
   return crypto.randomBytes(64).toString('hex')
 }
 
-exports.sha256 = function (password) {
+exports.hashPassword = function (password) {
   var salt = generateSalt()
   var hash = crypto.createHmac('sha256', salt)
   hash.update(password)
@@ -14,7 +14,7 @@ exports.sha256 = function (password) {
   }
 }
 
-exports.verify = function (password, salt, hash) {
+exports.verify = function (password, salt, sha256) {
   var calculated = crypto.createHmac('sha256', salt).update(password).digest('hex')
-  return hash === calculated
+  return calculated === sha256
 }

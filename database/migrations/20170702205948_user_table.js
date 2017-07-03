@@ -3,8 +3,8 @@ exports.up = function (knex, Promise) {
     .withSchema('public')
     .createTable('users', (table) => {
       table.increments('id').notNullable().primary()
-      table.string('email').notNullable()
-      table.string('username').notNullable()
+      table.string('email').unique().notNullable()
+      table.string('username').unique().notNullable()
       table.string('sha256').notNullable()
       table.string('salt').notNullable()
       table.string('pps')

@@ -1,8 +1,8 @@
 const users = require('../data/users.json').users
-const passwords = require('../../server/lib/password')
+const {hashPassword} = require('../../server/lib/password')
 
 var processed = users.map(function (user) {
-  var hash = passwords.sha256(user.password)
+  var hash = hashPassword(user.password)
   return {
     email: user.email,
     username: user.username,

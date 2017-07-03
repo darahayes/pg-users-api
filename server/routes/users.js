@@ -61,6 +61,39 @@ exports.register = function register (server, opts, next) {
       }
     },
     {
+      method: 'POST',
+      path: '/api/user',
+      handler: (req, reply) => {
+        console.log(req.payload)
+        Users.create(req.payload, (err, user) => {
+          if (err) {
+            if (err.code && err.code === '23505') {
+              return reply({error: err.detail}).code(400)
+            }
+            return reply(Boom.badImplementation())
+          }
+          reply(user)
+        })
+      },
+      config: {
+        validate: {
+          payload: {
+            email: Joi.string().email().lowercase().required(),
+            username: Joi.string().token().min(4).max(50).lowercase().trim().required(),
+            password: Joi.string().min(6).max(128).required(),
+            phone: Joi.string(),
+            cell: Joi.string(),
+            dob: Joi.date().min('1-1-1900').max('now'),
+            pps: Joi.string().regex(/^(\d{7})([A-Z]{1,2})$/i),
+            gender: Joi.string().valid(['male', 'female', 'other'])
+          }
+        },
+        auth: false,
+        description: `Create a user`,
+        tags: ['api', 'users']
+      }
+    },
+    {
       method: 'DELETE',
       path: '/api/user/{id}',
       handler: (req, reply) => {
@@ -81,7 +114,29 @@ exports.register = function register (server, opts, next) {
         description: `Delete a user by ID`,
         tags: ['api', 'users']
       }
-    }
+    },
+    {
+      method: 'POST',
+      path: '/api/user/login',
+      handler: (req, reply) => {
+        console.log(req.payload)
+        Users.verifyLogin(req.payload, (err, verified) => {
+          if (err) return reply(Boom.badImplementation())
+          reply(verified).code(verified ? 200 : 400)
+        })
+      },
+      config: {
+        validate: {
+          payload: Joi.object().keys({
+            login: Joi.string().required(),
+            password: Joi.string().required()
+          })
+        },
+        auth: false,
+        description: `Create a user`,
+        tags: ['api', 'users']
+      }
+    },
   ]
 
   server.route(routes)

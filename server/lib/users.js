@@ -1,5 +1,6 @@
 'use strict'
 const {getDb} = require('./db')
+const {hashPassword, verify} = require('./password')
 
 const defaultFields = [
   'email',
@@ -11,13 +12,22 @@ const allowedFields = [
   'email',
   'username',
   'gender',
-  'name',
-  'location',
   'dob',
   'phone',
   'cell',
   'pps',
-  'picture'
+  'registered'
+]
+
+const modifiableFields = [
+  'email',
+  'username',
+  'password',
+  'phone',
+  'cell',
+  'dob',
+  'pps',
+  'gender'
 ]
 
 function list (fields, offset, limit, callback) {
@@ -48,8 +58,29 @@ function read (id, fields, callback) {
   })
 }
 
-function create (callback) {
-  callback(null, 'Testing')
+function create (user, callback) {
+  getDb((err, db) => {
+    if (err) return callback(err)
+    let hash = hashPassword(user.password)
+    db('users').insert({
+      email: user.email,
+      username: user.username,
+      salt: hash.salt,
+      sha256: hash.sha256,
+      phone: user.phone,
+      cell: user.cell,
+      dob: user.dob,
+      pps: user.pps,
+      gender: user.gender
+    }).returning(allowedFields).then((result) => {
+      console.log(result)
+      callback(null, result[0])
+    })
+    .catch((err) => {
+      console.log(err)
+      callback(err)
+    })
+  })
 }
 
 function update (callback) {
@@ -69,11 +100,35 @@ function remove (id, callback) {
   })
 }
 
+function verifyLogin(creds, callback) {
+  getDb((err, db) => {
+    if (err) return callback(err)
+    db('users').select().where('email', creds.login).orWhere('username', creds.login).then((result) => {
+      if (result.length > 0) {
+        let user = result[0]
+        console.log('USER', user)
+        var isVerified = verify(creds.password, user.salt, user.sha256)
+        console.log('isVerified', isVerified)
+        callback(null, isVerified)
+      }
+      else {
+        callback(false)
+      } 
+    })
+    .catch((err) => {
+      console.log(err)
+      callback(err)
+    })
+  })
+}
+
 module.exports = {
   list,
   read,
   create,
   update,
   remove,
-  allowedFields
+  verifyLogin,
+  allowedFields,
+  modifiableFields
 }
