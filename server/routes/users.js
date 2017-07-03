@@ -3,6 +3,7 @@
 const Users = require('../lib/users.js')
 const Joi = require('joi')
 const Boom = require('boom')
+const querystring = require('querystring')
 
 exports.register = function register (server, opts, next) {
   const routes = [
@@ -14,6 +15,12 @@ exports.register = function register (server, opts, next) {
         Users.list(fields, offset, limit, (err, result) => {
           if (err) {
             return reply(Boom.badImplementation())
+          }
+          if (result.nextPage) {
+            result.nextPage = `${server.info.uri}${req.path}?offset=${result.nextPage.offset}&limit=${result.nextPage.limit}`
+            if (fields) {
+              result.nextPage += `&${querystring.stringify({fields: fields})}`
+            }
           }
           return reply(result)
         })

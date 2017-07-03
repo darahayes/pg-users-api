@@ -36,7 +36,14 @@ function list (fields, offset, limit, callback) {
     offset = offset || 0
     limit = limit || 10
     db('users').column(fields || defaultFields).select().where('id', '>', offset).orderBy('id', 'asc').limit(limit)
-      .then((result) => {
+      .then((rows) => {
+        let result = {rows: rows}
+        if (rows.length === limit) {
+          result.nextPage = {
+            offset: offset + limit,
+            limit: limit
+          }
+        }
         callback(null, result)
       })
       .catch((e) => {
