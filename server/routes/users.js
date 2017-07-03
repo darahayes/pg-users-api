@@ -10,7 +10,8 @@ exports.register = function register (server, opts, next) {
       method: 'GET',
       path: '/api/user',
       handler: (req, reply) => {
-        Users.list((err, result) => {
+        let fields = req.query && req.query.fields ? req.query.fields : null
+        Users.list(fields, (err, result) => {
           if (err) {
             return reply(Boom.badImplementation())
           }
@@ -19,7 +20,12 @@ exports.register = function register (server, opts, next) {
       },
       config: {
         tags: ['api'],
-        auth: false
+        auth: false,
+        validate: {
+          query: {
+            fields: [Joi.string().valid(Users.allowedFields), Joi.array().items(Joi.string().valid(Users.allowedFields))]
+          }
+        }
       }
     },
     {
@@ -27,7 +33,8 @@ exports.register = function register (server, opts, next) {
       path: '/api/user/{id}',
       handler: (req, reply) => {
         let {id} = req.params
-        Users.read(id, (err, user) => {
+        let fields = req.query && req.query.fields ? req.query.fields : null
+        Users.read(id, fields, (err, user) => {
           if (err) {
             return reply(Boom.badImplementation)
           }
@@ -39,9 +46,12 @@ exports.register = function register (server, opts, next) {
       },
       config: {
         validate: {
-          params: Joi.object({
+          params: {
             id: Joi.number().min(1).required()
-          })
+          },
+          query: {
+            fields: [Joi.string().valid(Users.allowedFields), Joi.array().items(Joi.string().valid(Users.allowedFields))]
+          }
         },
         auth: false,
         description: `Read a user by ID`,

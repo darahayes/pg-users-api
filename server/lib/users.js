@@ -1,10 +1,28 @@
 'use strict'
 const {getDb} = require('./db')
 
-function list (callback) {
+const defaultFields = [
+  'email',
+  'username'
+]
+
+const allowedFields = [
+  'email',
+  'username',
+  'gender',
+  'name',
+  'location',
+  'dob',
+  'phone',
+  'cell',
+  'pps',
+  'picture'
+]
+
+function list (fields, callback) {
   getDb((err, db) => {
     if (err) return callback(err)
-    db.column('email', 'username').select().from('users')
+    db.column(fields || defaultFields).select().from('users')
       .then((result) => {
         callback(null, result)
       })
@@ -14,10 +32,10 @@ function list (callback) {
   })
 }
 
-function read (id, callback) {
+function read (id, fields, callback) {
   getDb((err, db) => {
     if (err) return callback(err)
-    db('users').select('email', 'username').where('id', id)
+    db('users').select(fields || defaultFields).where('id', id)
       .then((result) => {
         callback(null, result.length > 0 ? result[0] : null)
       })
@@ -49,9 +67,10 @@ function remove (id, callback) {
 }
 
 module.exports = {
-  list: list,
-  read: read,
-  create: create,
-  update: update,
-  remove: remove
+  list,
+  read,
+  create,
+  update,
+  remove,
+  allowedFields
 }

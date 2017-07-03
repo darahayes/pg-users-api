@@ -7,7 +7,13 @@ var processed = users.map(function (user) {
     email: user.email,
     username: user.username,
     sha256: hash.sha256,
-    salt: hash.salt
+    salt: hash.salt,
+    registered: new Date(user.registered),
+    dob: new Date(user.dob),
+    phone: user.phone,
+    cell: user.cell,
+    pps: user.PPS,
+    gender: user.gender
   }
 })
 
