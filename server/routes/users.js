@@ -92,7 +92,23 @@ exports.register = function register (server, opts, next) {
             cell: Joi.string(),
             dob: Joi.date().min('1-1-1900').max('now'),
             pps: Joi.string().regex(/^(\d{7})([A-Z]{1,2})$/i),
-            gender: Joi.string().valid(['male', 'female', 'other'])
+            gender: Joi.string().valid(['male', 'female', 'other']),
+            name: Joi.object().keys({
+              title: Joi.string().max(10),
+              first: Joi.string().max(40),
+              last: Joi.string().max(40)
+            }),
+            picture: Joi.object().keys({
+              small: Joi.string().uri(),
+              medium: Joi.string().uri(),
+              large: Joi.string().uri()
+            }),
+            location: Joi.object().keys({
+              street: Joi.string().max(256).required(),
+              city: Joi.string().max(256).required(),
+              state: Joi.string().max(256).required(),
+              zip: Joi.number()
+            })
           }
         },
         auth: false,
@@ -127,7 +143,23 @@ exports.register = function register (server, opts, next) {
             cell: Joi.string(),
             dob: Joi.date().min('1-1-1900').max('now'),
             pps: Joi.string().regex(/^(\d{7})([A-Z]{1,2})$/i),
-            gender: Joi.string().valid(['male', 'female', 'other'])
+            gender: Joi.string().valid(['male', 'female', 'other']),
+            name: Joi.object().keys({
+              title: Joi.string().max(10),
+              first: Joi.string().max(40),
+              last: Joi.string().max(40)
+            }),
+            picture: Joi.object().keys({
+              small: Joi.string().uri(),
+              medium: Joi.string().uri(),
+              large: Joi.string().uri()
+            }),
+            location: Joi.object().keys({
+              street: Joi.string().max(256).required(),
+              city: Joi.string().max(256).required(),
+              state: Joi.string().max(256).required(),
+              zip: Joi.number()
+            })
           }
         },
         auth: false,

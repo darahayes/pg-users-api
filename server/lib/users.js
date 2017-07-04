@@ -5,13 +5,14 @@ const {UniqueConstraintError, UserNotFoundError} = require('./errors')
 
 const defaultFields = [
   'email',
-  'username'
+  'username',
+  'name'
 ]
 
-const modifiableFields = [
+const allowedFields = [
+  'id',
   'email',
   'username',
-  'password',
   'phone',
   'cell',
   'dob',
@@ -21,8 +22,6 @@ const modifiableFields = [
   'name',
   'picture'
 ]
-
-const allowedFields = ['id'].concat(modifiableFields)
 
 function list (fields, offset, limit, callback) {
   getDb((err, db) => {
@@ -75,13 +74,19 @@ function create (user, callback) {
       cell: user.cell,
       dob: user.dob,
       pps: user.pps,
-      gender: user.gender
+      gender: user.gender,
+      name: user.name,
+      picture: user.picture,
+      location: user.location
     }).returning(allowedFields).then((result) => {
       console.log(result)
       callback(null, result[0])
     })
     .catch((err) => {
       console.log(err)
+      if (err.constraint) {
+        callback(new UniqueConstraintError(err.constraint))
+      }
       callback(err)
     })
   })
@@ -149,6 +154,5 @@ module.exports = {
   update,
   remove,
   verifyLogin,
-  allowedFields,
-  modifiableFields
+  allowedFields
 }
