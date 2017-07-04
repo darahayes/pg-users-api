@@ -8,18 +8,6 @@ const defaultFields = [
   'username'
 ]
 
-const allowedFields = [
-  'id',
-  'email',
-  'username',
-  'gender',
-  'dob',
-  'phone',
-  'cell',
-  'pps',
-  'registered'
-]
-
 const modifiableFields = [
   'email',
   'username',
@@ -28,8 +16,13 @@ const modifiableFields = [
   'cell',
   'dob',
   'pps',
-  'gender'
+  'gender',
+  'location',
+  'name',
+  'picture'
 ]
+
+const allowedFields = ['id'].concat(modifiableFields)
 
 function list (fields, offset, limit, callback) {
   getDb((err, db) => {

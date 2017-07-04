@@ -13,7 +13,10 @@ var processed = users.map(function (user) {
     phone: user.phone,
     cell: user.cell,
     pps: user.PPS,
-    gender: user.gender
+    gender: user.gender,
+    picture: user.picture,
+    location: user.location,
+    name: user.name
   }
 })
 
