@@ -47,7 +47,7 @@ exports.register = function register (server, opts, next) {
         Users.read(id, fields, (err, user) => {
           if (err) {
             if (err instanceof UserNotFoundError) {
-              return(Boom.notFound(err))
+              return (Boom.notFound(err))
             }
             return reply(Boom.badImplementation)
           }
@@ -125,8 +125,7 @@ exports.register = function register (server, opts, next) {
           if (err) {
             if (err instanceof UniqueConstraintError && err.message) {
               reply(Boom.badRequest(err))
-            }
-            else if (err instanceof UserNotFoundError) {
+            } else if (err instanceof UserNotFoundError) {
               reply(Boom.notFound(err))
             }
             return reply(Boom.badImplementation())
@@ -210,7 +209,7 @@ exports.register = function register (server, opts, next) {
         description: `Create a user`,
         tags: ['api', 'users']
       }
-    },
+    }
   ]
 
   server.route(routes)

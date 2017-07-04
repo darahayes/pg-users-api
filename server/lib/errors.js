@@ -1,4 +1,4 @@
-'use strict';
+'use strict'
 const util = require('util')
 
 const constraintMessages = {
@@ -6,19 +6,19 @@ const constraintMessages = {
   'users_username_unique': 'username already in use'
 }
 
-function UserNotFoundError(message, detail) {
+function UserNotFoundError (message, detail) {
   Error.captureStackTrace(this, this.constructor)
-  this.name = this.constructor.name;
+  this.name = this.constructor.name
   this.message = 'user not found'
   this.detail = detail
 }
 
-function UniqueConstraintError(constraint) {
+function UniqueConstraintError (constraint) {
   Error.captureStackTrace(this, this.constructor)
   this.message = constraintMessages[constraint]
 }
 
-function InvalidLoginError() {
+function InvalidLoginError () {
   Error.captureStackTrace(this, this.constructor)
   this.message = 'Invalid login'
 }

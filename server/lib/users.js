@@ -65,30 +65,32 @@ function create (user, callback) {
   getDb((err, db) => {
     if (err) return callback(err)
     let hash = hashPassword(user.password)
-    db('users').insert({
-      email: user.email,
-      username: user.username,
-      salt: hash.salt,
-      sha256: hash.sha256,
-      phone: user.phone,
-      cell: user.cell,
-      dob: user.dob,
-      pps: user.pps,
-      gender: user.gender,
-      name: user.name,
-      picture: user.picture,
-      location: user.location
-    }).returning(allowedFields).then((result) => {
-      console.log(result)
-      callback(null, result[0])
-    })
-    .catch((err) => {
-      console.log(err)
-      if (err.constraint) {
-        callback(new UniqueConstraintError(err.constraint))
-      }
-      callback(err)
-    })
+    db('users')
+      .insert({
+        email: user.email,
+        username: user.username,
+        salt: hash.salt,
+        sha256: hash.sha256,
+        phone: user.phone,
+        cell: user.cell,
+        dob: user.dob,
+        pps: user.pps,
+        gender: user.gender,
+        name: user.name,
+        picture: user.picture,
+        location: user.location
+      })
+      .returning(allowedFields).then((result) => {
+        console.log(result)
+        callback(null, result[0])
+      })
+      .catch((err) => {
+        console.log(err)
+        if (err.constraint) {
+          callback(new UniqueConstraintError(err.constraint))
+        }
+        callback(err)
+      })
   })
 }
 
@@ -97,22 +99,22 @@ function update (userId, fields, callback) {
     if (err) return callback(err)
     console.log('updating userId', userId, fields)
     db('users')
-    .where('id', userId)
-    .update(fields)
-    .returning(allowedFields)
-    .then((result) => {
-      if (result.length > 0) {
-        return callback(null, result[0])
-      }
-      callback(new UserNotFoundError())
-    })
-    .catch((err) => {
-      console.log(err)
-      if (err.constraint) {
-        callback(new UniqueConstraintError(err.constraint))
-      }
-      callback(err)
-    })
+      .where('id', userId)
+      .update(fields)
+      .returning(allowedFields)
+      .then((result) => {
+        if (result.length > 0) {
+          return callback(null, result[0])
+        }
+        callback(new UserNotFoundError())
+      })
+      .catch((err) => {
+        console.log(err)
+        if (err.constraint) {
+          callback(new UniqueConstraintError(err.constraint))
+        }
+        callback(err)
+      })
   })
 }
 
@@ -129,21 +131,24 @@ function remove (id, callback) {
   })
 }
 
-function verifyLogin(creds, callback) {
+function verifyLogin (creds, callback) {
   getDb((err, db) => {
     if (err) return callback(err)
-    db('users').select().where('email', creds.login).orWhere('username', creds.login).then((result) => {
-      if (result.length > 0) {
-        let user = result[0]
-        callback(null, verify(creds.password, user.salt, user.sha256))
-      }
-      else {
-        callback(null, false)
-      } 
-    })
-    .catch((err) => {
-      callback(err)
-    })
+    db('users')
+      .select()
+      .where('email', creds.login)
+      .orWhere('username', creds.login)
+      .then((result) => {
+        if (result.length > 0) {
+          let user = result[0]
+          callback(null, verify(creds.password, user.salt, user.sha256))
+        } else {
+          callback(null, false)
+        }
+      })
+      .catch((err) => {
+        callback(err)
+      })
   })
 }
 
