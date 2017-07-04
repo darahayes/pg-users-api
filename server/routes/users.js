@@ -4,6 +4,7 @@ const Users = require('../lib/users.js')
 const Joi = require('joi')
 const Boom = require('boom')
 const querystring = require('querystring')
+const {UniqueConstraintError, UserNotFoundError, InvalidLoginError} = require('../lib/errors')
 
 exports.register = function register (server, opts, next) {
   const routes = [
@@ -45,10 +46,10 @@ exports.register = function register (server, opts, next) {
         let fields = req.query && req.query.fields ? req.query.fields : null
         Users.read(id, fields, (err, user) => {
           if (err) {
+            if (err instanceof UserNotFoundError) {
+              return(Boom.notFound(err))
+            }
             return reply(Boom.badImplementation)
-          }
-          if (!user) {
-            return reply(Boom.notFound('User not found'))
           }
           reply(user)
         })
@@ -71,11 +72,10 @@ exports.register = function register (server, opts, next) {
       method: 'POST',
       path: '/api/user',
       handler: (req, reply) => {
-        console.log(req.payload)
         Users.create(req.payload, (err, user) => {
           if (err) {
-            if (err.code && err.code === '23505') {
-              return reply({error: err.detail}).code(400)
+            if (err instanceof UniqueConstraintError && err.message) {
+              return reply(Boom.badRequest(err))
             }
             return reply(Boom.badImplementation())
           }
@@ -101,6 +101,41 @@ exports.register = function register (server, opts, next) {
       }
     },
     {
+      method: 'PUT',
+      path: '/api/user/{id}',
+      handler: (req, reply) => {
+        let {id} = req.params
+        Users.update(id, req.payload, (err, user) => {
+          if (err) {
+            if (err instanceof UniqueConstraintError && err.message) {
+              reply(Boom.badRequest(err))
+            }
+            else if (err instanceof UserNotFoundError) {
+              reply(Boom.notFound(err))
+            }
+            return reply(Boom.badImplementation())
+          }
+          reply(user)
+        })
+      },
+      config: {
+        validate: {
+          payload: {
+            email: Joi.string().email().lowercase(),
+            username: Joi.string().token().min(4).max(50).lowercase().trim(),
+            phone: Joi.string(),
+            cell: Joi.string(),
+            dob: Joi.date().min('1-1-1900').max('now'),
+            pps: Joi.string().regex(/^(\d{7})([A-Z]{1,2})$/i),
+            gender: Joi.string().valid(['male', 'female', 'other'])
+          }
+        },
+        auth: false,
+        description: `Create a user`,
+        tags: ['api', 'users']
+      }
+    },
+    {
       method: 'DELETE',
       path: '/api/user/{id}',
       handler: (req, reply) => {
@@ -108,7 +143,7 @@ exports.register = function register (server, opts, next) {
         Users.remove(id, (err, deleted) => {
           if (err) return reply(Boom.badImplementation())
           if (!deleted) return reply(Boom.notFound('User not found'))
-          reply().statusCode(200)
+          reply()
         })
       },
       config: {
@@ -129,7 +164,7 @@ exports.register = function register (server, opts, next) {
         console.log(req.payload)
         Users.verifyLogin(req.payload, (err, verified) => {
           if (err) return reply(Boom.badImplementation())
-          reply(verified).code(verified ? 200 : 400)
+          reply(Boom.unauthorized(new InvalidLoginError()))
         })
       },
       config: {

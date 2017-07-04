@@ -1,6 +1,7 @@
 'use strict'
 const {getDb} = require('./db')
 const {hashPassword, verify} = require('./password')
+const {UniqueConstraintError, UserNotFoundError} = require('./errors')
 
 const defaultFields = [
   'email',
@@ -57,7 +58,10 @@ function read (id, fields, callback) {
     if (err) return callback(err)
     db('users').select(fields || defaultFields).where('id', id)
       .then((result) => {
-        callback(null, result.length > 0 ? result[0] : null)
+        if (result.length > 0) {
+          return callback(null, result[0])
+        }
+        callback(null, new UserNotFoundError())
       })
       .catch((e) => {
         callback(e)
@@ -90,8 +94,28 @@ function create (user, callback) {
   })
 }
 
-function update (callback) {
-  callback(null, 'Testing')
+function update (userId, fields, callback) {
+  getDb((err, db) => {
+    if (err) return callback(err)
+    console.log('updating userId', userId, fields)
+    db('users')
+    .where('id', userId)
+    .update(fields)
+    .returning(allowedFields)
+    .then((result) => {
+      if (result.length > 0) {
+        return callback(null, result[0])
+      }
+      callback(new UserNotFoundError())
+    })
+    .catch((err) => {
+      console.log(err)
+      if (err.constraint) {
+        callback(new UniqueConstraintError(err.constraint))
+      }
+      callback(err)
+    })
+  })
 }
 
 function remove (id, callback) {
@@ -113,17 +137,13 @@ function verifyLogin(creds, callback) {
     db('users').select().where('email', creds.login).orWhere('username', creds.login).then((result) => {
       if (result.length > 0) {
         let user = result[0]
-        console.log('USER', user)
-        var isVerified = verify(creds.password, user.salt, user.sha256)
-        console.log('isVerified', isVerified)
-        callback(null, isVerified)
+        callback(null, verify(creds.password, user.salt, user.sha256))
       }
       else {
-        callback(false)
+        callback(null, false)
       } 
     })
     .catch((err) => {
-      console.log(err)
       callback(err)
     })
   })
