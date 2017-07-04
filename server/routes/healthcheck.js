@@ -5,7 +5,7 @@ exports.register = function register (server, opts, next) {
     config: {
       tags: ['api'],
       auth: false,
-      handler: (req, reply) => reply({ok: 'true'})
+      handler: (req, reply) => reply()
     }
   })
 

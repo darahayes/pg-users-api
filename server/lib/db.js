@@ -15,7 +15,6 @@ function connect (callback) {
 
     callback(null, database)
   } catch (e) {
-    console.error(e)
     callback(e)
   }
 }

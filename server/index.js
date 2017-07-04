@@ -1,4 +1,3 @@
-// @ts-nocheck
 const Server = require('hapi').Server
 const config = require('./config')
 const inert = require('inert')
@@ -12,7 +11,7 @@ const {name, version} = require('../package.json')
 const startServer = () => {
   const debugMode = !config.isProd
 
-  const server = new Server({debug: debugMode ? {log: ['debug', 'error', 'warn'], request: ['debug', 'error', 'warn']} : true})
+  const server = new Server({ debug: { request: ['error'] } })
 
   server.connection({host: config.host, port: config.port})
 
@@ -20,7 +19,25 @@ const startServer = () => {
     vision,
     inert,
     healthcheck,
-    users
+    users,
+    {
+      register: require('good'),
+      options: {
+        reporters: {
+          console: [
+            {
+              module: 'good-squeeze',
+              name: 'Squeeze',
+              args: [{ log: '*', response: '*' }]
+            },
+            {
+              module: 'good-console'
+            },
+            'stdout'
+          ]
+        }
+      }
+    }
   ]
 
   if (!config.isProd) {

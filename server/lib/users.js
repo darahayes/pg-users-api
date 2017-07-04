@@ -81,11 +81,9 @@ function create (user, callback) {
         location: user.location
       })
       .returning(allowedFields).then((result) => {
-        console.log(result)
         callback(null, result[0])
       })
       .catch((err) => {
-        console.log(err)
         if (err.constraint) {
           callback(new UniqueConstraintError(err.constraint))
         }
@@ -97,7 +95,6 @@ function create (user, callback) {
 function update (userId, fields, callback) {
   getDb((err, db) => {
     if (err) return callback(err)
-    console.log('updating userId', userId, fields)
     db('users')
       .where('id', userId)
       .update(fields)
@@ -109,7 +106,6 @@ function update (userId, fields, callback) {
         callback(new UserNotFoundError())
       })
       .catch((err) => {
-        console.log(err)
         if (err.constraint) {
           callback(new UniqueConstraintError(err.constraint))
         }
