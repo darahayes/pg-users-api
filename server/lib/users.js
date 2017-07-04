@@ -131,6 +131,22 @@ function remove (id, callback) {
   })
 }
 
+function search (query, fields, callback) {
+  getDb((err, db) => {
+    if (err) return callback(err)
+    db('users')
+      .select(fields || defaultFields)
+      .where('email', 'like', `%${query}%`)
+      .orWhere('username', 'like', `%${query}%`)
+      .then((rows) => {
+        callback(null, rows)
+      })
+      .catch(e => {
+        callback(e)
+      })
+  })
+}
+
 function verifyLogin (creds, callback) {
   getDb((err, db) => {
     if (err) return callback(err)
@@ -158,6 +174,7 @@ module.exports = {
   create,
   update,
   remove,
+  search,
   verifyLogin,
   allowedFields
 }

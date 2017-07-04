@@ -6,3 +6,7 @@ exports.up = function (knex, Promise) {
     table.jsonb('name')
   })
 }
+
+exports.down = function (knex, Promise) {
+
+}

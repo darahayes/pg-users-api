@@ -209,6 +209,30 @@ exports.register = function register (server, opts, next) {
         description: `Create a user`,
         tags: ['api', 'users']
       }
+    },
+    {
+      method: 'GET',
+      path: '/api/user/search',
+      handler: (req, reply) => {
+        let {fields, query} = req.query
+        Users.search(query, fields, (err, result) => {
+          if (err) {
+            return reply(Boom.badImplementation)
+          }
+          reply(result)
+        })
+      },
+      config: {
+        validate: {
+          query: {
+            query: Joi.string().lowercase().required(),
+            fields: [Joi.string().valid(Users.allowedFields), Joi.array().items(Joi.string().valid(Users.allowedFields))]
+          }
+        },
+        auth: false,
+        description: `Read a user by ID`,
+        tags: ['api', 'users']
+      }
     }
   ]
 
