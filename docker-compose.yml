@@ -9,8 +9,8 @@ services:
       - "3001:3001"
     environment:
       RH_USERS_HOST: 0.0.0.0
-      PG_HOST: postgres
-    command: npm run db:init && npm run start:dev
+      DB_HOST: postgres
+    command: /bin/sh -c "npm run db:init && npm run db:migrate && npm run db:seed && npm run start:dev"
     links:
       - postgres
 

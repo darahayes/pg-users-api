@@ -6,7 +6,7 @@ module.exports = {
   prod: process.env.NODE_ENV === 'production',
   pg: {
     host: process.env.DB_HOST || 'localhost',
-    port: process.env.PG_HOST || 5432,
+    port: process.env.DB_PORT || 5432,
     database: process.env.RH_USERS_DB || 'rh_users',
     user: process.env.DB_USER || 'postgres',
     password: process.env.DB_PASSWORD || 'postgres'

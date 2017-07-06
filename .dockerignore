@@ -3,8 +3,6 @@ coverage
 node_modules
 test
 .gitignore
-.drone.yml
-.drone.yml.sig
 Dockerfile
 README.md
 .dockerignore
