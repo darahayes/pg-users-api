@@ -31,7 +31,7 @@ exports.register = function register (server, opts, next) {
         auth: false,
         validate: {
           query: {
-            fields: [Joi.string().valid(Users.allowedFields), Joi.array().items(Joi.string().valid(Users.allowedFields))],
+            fields: [Joi.array().items(Joi.string().valid(Users.allowedFields, 'all')), Joi.string().valid(Users.allowedFields, 'all')],
             offset: Joi.number().min(0),
             limit: Joi.number().min(10).max(30)
           }
@@ -47,9 +47,9 @@ exports.register = function register (server, opts, next) {
         Users.read(id, fields, (err, user) => {
           if (err) {
             if (err instanceof UserNotFoundError) {
-              return (Boom.notFound(err))
+              return reply(Boom.notFound(err))
             }
-            return reply(Boom.badImplementation)
+            return reply(Boom.badImplementation())
           }
           reply(user)
         })
@@ -60,7 +60,7 @@ exports.register = function register (server, opts, next) {
             id: Joi.number().min(1).required()
           },
           query: {
-            fields: [Joi.string().valid(Users.allowedFields), Joi.array().items(Joi.string().valid(Users.allowedFields))]
+            fields: [Joi.array().items(Joi.string().valid(Users.allowedFields, 'all')), Joi.string().valid(Users.allowedFields, 'all')]
           }
         },
         auth: false,
@@ -135,6 +135,9 @@ exports.register = function register (server, opts, next) {
       },
       config: {
         validate: {
+          params: {
+            id: Joi.number().min(1).required()
+          },
           payload: {
             email: Joi.string().email().lowercase(),
             username: Joi.string().token().min(4).max(50).lowercase().trim(),
@@ -171,9 +174,13 @@ exports.register = function register (server, opts, next) {
       path: '/api/user/{id}',
       handler: (req, reply) => {
         let {id} = req.params
-        Users.remove(id, (err, deleted) => {
-          if (err) return reply(Boom.badImplementation())
-          if (!deleted) return reply(Boom.notFound('User not found'))
+        Users.remove(id, (err) => {
+          if (err) {
+            if (err instanceof UserNotFoundError) {
+              return reply(Boom.notFound(err))
+            }
+            return reply(Boom.badImplementation())
+          }
           reply()
         })
       },
@@ -195,7 +202,8 @@ exports.register = function register (server, opts, next) {
         console.log(req.payload)
         Users.verifyLogin(req.payload, (err, verified) => {
           if (err) return reply(Boom.badImplementation())
-          reply(Boom.unauthorized(new InvalidLoginError()))
+          if (!verified) return reply(Boom.unauthorized(new InvalidLoginError()))
+          reply()
         })
       },
       config: {
@@ -217,7 +225,7 @@ exports.register = function register (server, opts, next) {
         let {fields, query} = req.query
         Users.search(query, fields, (err, result) => {
           if (err) {
-            return reply(Boom.badImplementation)
+            return reply(Boom.badImplementation())
           }
           reply(result)
         })
@@ -226,7 +234,7 @@ exports.register = function register (server, opts, next) {
         validate: {
           query: {
             query: Joi.string().lowercase().required(),
-            fields: [Joi.string().valid(Users.allowedFields), Joi.array().items(Joi.string().valid(Users.allowedFields))]
+            fields: [Joi.array().items(Joi.string().valid(Users.allowedFields, 'all')), Joi.string().valid(Users.allowedFields, 'all')]
           }
         },
         auth: false,

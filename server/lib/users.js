@@ -23,12 +23,13 @@ const allowedFields = [
   'picture'
 ]
 
-function list (fields, offset, limit, callback) {
+function list (fields=defaultFields, offset, limit, callback) {
   getDb((err, db) => {
     if (err) return callback(err)
+    if (fields === 'all') fields = allowedFields
     offset = offset || 0
     limit = limit || 10
-    db('users').column(fields || defaultFields).select().where('id', '>', offset).orderBy('id', 'asc').limit(limit)
+    db('users').column(fields).select().where('id', '>', offset).orderBy('id', 'asc').limit(limit)
       .then((rows) => {
         let result = {rows: rows}
         if (rows.length === limit) {
@@ -45,15 +46,16 @@ function list (fields, offset, limit, callback) {
   })
 }
 
-function read (id, fields, callback) {
+function read (id, fields=defaultFields, callback) {
   getDb((err, db) => {
     if (err) return callback(err)
-    db('users').select(fields || defaultFields).where('id', id)
+    if (fields === 'all') fields = allowedFields
+    db('users').select(fields).where('id', id)
       .then((result) => {
         if (result.length > 0) {
           return callback(null, result[0])
         }
-        callback(null, new UserNotFoundError())
+        callback(new UserNotFoundError())
       })
       .catch((e) => {
         callback(e)
@@ -119,7 +121,10 @@ function remove (id, callback) {
     if (err) return callback(err)
     db('users').where('id', id).delete()
       .then((rows) => {
-        callback(null, rows > 0)
+        if (rows === 0) {
+          return callback(new UserNotFoundError())
+        }
+        callback(null, true)
       })
       .catch(e => {
         callback(e)
@@ -127,11 +132,12 @@ function remove (id, callback) {
   })
 }
 
-function search (query, fields, callback) {
+function search (query, fields=defaultFields, callback) {
   getDb((err, db) => {
     if (err) return callback(err)
+    if (fields === 'all') fields = allowedFields
     db('users')
-      .select(fields || defaultFields)
+      .select(fields)
       .where('email', 'like', `%${query}%`)
       .orWhere('username', 'like', `%${query}%`)
       .then((rows) => {
