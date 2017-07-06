@@ -28,6 +28,7 @@
     "async": "^2.5.0",
     "boom": "^5.1.0",
     "code": "^4.1.0",
+    "dotenv": "^4.0.0",
     "eslint-config-standard": "^10.2.1",
     "eslint-plugin-import": "^2.6.1",
     "eslint-plugin-node": "^5.1.0",
