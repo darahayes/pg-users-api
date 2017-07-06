@@ -145,7 +145,7 @@ Returning:
 
 ### POST /api/user/login
 
-Fake login endpoint that takes a email/username and password combo and verifies the password against the user's hashed password created and stored at the time of creation.
+Fake login endpoint that takes a email/username and password combo and verifies the password against the user's hashed password stored at the time of user creation.
 
 ```
 curl -i -X POST --header 'Content-Type: application/json' --header 'Accept: application/json' -d '{
