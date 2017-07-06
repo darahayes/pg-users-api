@@ -25,6 +25,7 @@ function InvalidLoginError () {
 
 util.inherits(UserNotFoundError, Error)
 util.inherits(UniqueConstraintError, Error)
+util.inherits(InvalidLoginError, Error)
 
 module.exports = {
   UniqueConstraintError,
