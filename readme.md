@@ -52,7 +52,6 @@ The user is modelled in postgres as a single table. For quicker development the 
 We have the ability to search by username and by email. By itself, the SQL `LIKE` operator tends to be very slow. However using a Postgres feature called `trigram indexes`, we can add a special index to our searchable fields which allows us to have reasonably fast fuzzy text searches with the like operator, e.g. `SELECT * from users where email LIKE %alsion%`.
 
 One limitation of our data model was that the name and location fields were in `jsonb` columns which we can't create trigram indexes for. There was another possible way of implementing a full text search but there wasn't enough time to get it to work properly.
-- 
 
 ## Endpoints
 
