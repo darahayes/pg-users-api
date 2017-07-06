@@ -124,9 +124,9 @@ exports.register = function register (server, opts, next) {
         Users.update(id, req.payload, (err, user) => {
           if (err) {
             if (err instanceof UniqueConstraintError && err.message) {
-              reply(Boom.badRequest(err))
+              return reply(Boom.badRequest(err))
             } else if (err instanceof UserNotFoundError) {
-              reply(Boom.notFound(err))
+              return reply(Boom.notFound(err))
             }
             return reply(Boom.badImplementation())
           }

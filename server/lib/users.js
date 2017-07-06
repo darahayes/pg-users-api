@@ -23,7 +23,7 @@ const allowedFields = [
   'picture'
 ]
 
-function list (fields=defaultFields, offset, limit, callback) {
+function list (fields = defaultFields, offset, limit, callback) {
   getDb((err, db) => {
     if (err) return callback(err)
     if (fields === 'all') fields = allowedFields
@@ -46,7 +46,7 @@ function list (fields=defaultFields, offset, limit, callback) {
   })
 }
 
-function read (id, fields=defaultFields, callback) {
+function read (id, fields = defaultFields, callback) {
   getDb((err, db) => {
     if (err) return callback(err)
     if (fields === 'all') fields = allowedFields
@@ -87,7 +87,7 @@ function create (user, callback) {
       })
       .catch((err) => {
         if (err.constraint) {
-          callback(new UniqueConstraintError(err.constraint))
+          return callback(new UniqueConstraintError(err.constraint))
         }
         callback(err)
       })
@@ -109,7 +109,7 @@ function update (userId, fields, callback) {
       })
       .catch((err) => {
         if (err.constraint) {
-          callback(new UniqueConstraintError(err.constraint))
+          return callback(new UniqueConstraintError(err.constraint))
         }
         callback(err)
       })
@@ -132,7 +132,7 @@ function remove (id, callback) {
   })
 }
 
-function search (query, fields=defaultFields, callback) {
+function search (query, fields = defaultFields, callback) {
   getDb((err, db) => {
     if (err) return callback(err)
     if (fields === 'all') fields = allowedFields
