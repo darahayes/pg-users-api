@@ -43,7 +43,7 @@ exports.register = function register (server, opts, next) {
       path: '/api/user/{id}',
       handler: (req, reply) => {
         let {id} = req.params
-        let fields = req.query && req.query.fields ? req.query.fields : null
+        let {fields} = req.query
         Users.read(id, fields, (err, user) => {
           if (err) {
             if (err instanceof UserNotFoundError) {
