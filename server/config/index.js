@@ -1,10 +1,10 @@
 'use strict'
-var dotenv = require('dotenv')
+const dotenv = require('dotenv')
 dotenv.config()
 
 module.exports = {
-  host: process.env.RH_USERS_HOST || 'localhost',
-  port: process.env.RH_USERS_PORT || 3001,
+  host: process.env.USERS_API_HOST || 'localhost',
+  port: process.env.USERS_API_PORT || 3001,
   prod: process.env.NODE_ENV === 'production',
   pg: {
     host: process.env.DB_HOST || 'localhost',
