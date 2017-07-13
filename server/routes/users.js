@@ -18,7 +18,7 @@ exports.register = function register (server, opts, next) {
             return reply(Boom.badImplementation())
           }
           if (result.nextPage) {
-            result.nextPage = `${req.info.host}${req.path}?offset=${result.nextPage.offset}&limit=${result.nextPage.limit}`
+            result.nextPage = `${req.connection.info.protocol}://${req.info.host}${req.path}?offset=${result.nextPage.offset}&limit=${result.nextPage.limit}`
             if (fields) {
               result.nextPage += `&${querystring.stringify({fields: fields})}`
             }
